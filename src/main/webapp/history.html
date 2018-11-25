@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title></title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <!--<link rel="stylesheet" href="JS/jPaginate/css/style.css" type="text/css">-->
+    <script type="text/javascript" src="js/jquery-3.1.0.js"></script>
+    <script type="text/javascript">
+        function nowdate() {
+            var now = new Date();
+            var nowYear = now.getFullYear();
+            var nowMonth = now.getMonth() + 1 < 10 ? "0" + (now.getMonth() + 1) : now.getMonth();
+            var nowDay = now.getDate() < 10 ? "0" + now.getDate() : now.getDate();
+            var nowDate = nowYear + "-" + nowMonth + "-" + nowDay;
+            $("#nowDate").val(nowDate);
+
+            function insertHistory() {
+                var tbody = document.createElement("tbody");
+                var data = [
+                    {id: "001", fullname: "张三", sex: "男", score: "98,33,48"},
+                    {id: "002", fullname: "李四", sex: "w", score: "11,22,33"},
+                    {id: "003", fullname: "kyo", sex: "m", score: "22,33,55"},
+                    {id: "004", fullname: "yamazaki", sex: "w", score: "99, 100, 80"}
+                ];
+                for (var dto in data) {
+                    var tr = document.createElement("tr");
+                    var td0 = tr.insertCell(0);
+                    td0.innerHTML = Data[dto].id;
+                }
+                var tab = document.getElementById("tabBinded");
+                tab.appendChild(tbody);//将节点tbody加入节点尾部
+            }
+        }
+
+        function getVehicleHistoryRecord() {
+            var a = document.getElementById("nowDate").value;
+            alert(a);
+        }
+
+
+        var httpUrl = "https://localhost:18443/";
+
+
+        var operatorId = "R22H82";
+        var vehicleId = 151091;
+        var callLetter = "13926672375";
+        var sn = "51036050720";
+
+
+        /**
+         * 页面加载完成
+         */
+        // $(function () {
+        //     getHistory(new Date(), "R22H82", 151091, "13926672375", "51036050720");
+        //
+        //
+        // });
+
+
+        /**
+         * 获取轨迹段
+         * @param date
+         * @param operatorId
+         * @param vehicleId
+         * @param callLetter
+         * @param sn
+         */
+        function getHistory(date, operatorId, vehicleId, callLetter, sn) {
+
+            $("#tbody").empty();
+            var saveData = {
+                "stamp": date,
+                "operatorId": operatorId,
+                "vehicle":
+                    {
+                        "vehicleId": vehicleId,
+                        "callLetter": callLetter,
+                        "sn": sn
+                    }
+            };
+            $.ajax({
+                url: httpUrl + "Tdcm/weixin/vehicle/history.do",
+                type: "post",
+                async: false,
+                contentType: 'text/plain;charset=utf-8',
+                data: JSON.stringify(saveData),
+                dataType: "json",
+                success: function (data) {
+                    console.log("打印返回的数据：" + data.data);
+                    var tab = $("#tbody");
+                    for (var i = 0; i < data.data.length; i++) {
+                        var $tr = $("<tr>\n" +
+                            "            <td></td>\n" +
+                            "            <td>" + data.data[i].beginStamp + "</td>\n" +
+                            "            <td>" + data.data[i].endStamp + "</td>\n" +
+                            "            <td>" + data.data[i].mileAge + "</td>\n" +
+                            "            <td>" + data.data[i].drivingTime + "</td>\n" +
+                            "            <td>" + (data.data[i].stopTime ? data.data[i].stopTime : '无') + "</td>\n" +
+                            "        </tr>");
+                        tab.append($tr);
+                    }
+                }
+            });
+        }
+
+
+        function getVehicleHistoryRecord() {
+            var date = $("#nowDate").val();
+            getHistory(date, operatorId, vehicleId, callLetter, sn);
+
+        }
+
+
+    </script>
+    <style>
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+            color: #4f6b72;
+            background: #E6EAE9;
+        }
+
+        .dateinput {
+            background-color: #15a6de;
+            width: 100%;
+            height: 60px;
+        }
+
+        #nowDate {
+            margin-top: 13px;
+            width: 150px;
+            height: 34px
+        }
+
+        .history {
+            with: 100%
+        }
+
+
+        #tabBinded{
+            /*width: 90%;*/
+            margin: 0 auto;
+        }
+
+        th {
+            font: bold 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+            color: #4f6b72;
+            border-right: 1px solid #C1DAD7;
+            border-bottom: 1px solid #C1DAD7;
+            border-top: 1px solid #C1DAD7;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 6px 6px 6px 12px;
+            background-color: #CAE8EA;
+        }
+
+        td {
+            border-right: 1px solid #C1DAD7;
+            border-bottom: 1px solid #C1DAD7;
+            /*background: #fff;*/
+            font-size: 14px;
+            padding: 6px 6px 6px 12px;
+            color: #4f6b72;
+        }
+
+        table tr:nth-child(2n) {
+            background-color: #f5fafa;
+        }
+
+        table tr:nth-child(2n+1) {
+            background-color: white;
+        }
+
+    </style>
+
+</head>
+
+<body onLoad="nowdate();">
+<div class="dateinput">
+    <div class="container">
+        <span>选择日期</span>
+        <input type="date" id="nowDate">
+        <button type="button" onClick="getVehicleHistoryRecord();" class="btn">搜索</button>
+    </div>
+</div>
+<div class="history">
+    <table id="tabBinded" class="table table-bordered table-hover">
+        <tr>
+            <th>启动时间</th>
+            <th>熄火时间</th>
+            <th>行驶里程</th>
+            <th>行驶时间</th>
+            <th>停靠时间</th>
+        </tr>
+        <tbody id="tbody">
+        <tr>
+            <td>10:50:00</td>
+            <td>11:50:00</td>
+            <td>60</td>
+            <td>01:00:00</td>
+            <td>02:45:00</td>
+        </tr>
+        <tr>
+            <td>10:50:00</td>
+            <td>11:50:00</td>
+            <td>60</td>
+            <td>01:00:00</td>
+            <td>02:45:00</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+</div>
+</body>
+</html>

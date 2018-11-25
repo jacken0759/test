@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+    <style type="text/css">
+        body, html, #allmap {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+
+        /*地图放大*/
+        .BMap_stdMpZoomIn {
+            background-position: 0px -221px;
+        }
+
+        .BMap_stdMpZoomIn:hover {
+            background-position: 0px -243px;
+        }
+
+        /*地图缩小*/
+        .BMap_stdMpZoomOut {
+            background-position: 0px -265px;
+        }
+
+        .BMap_stdMpZoomOut:hover {
+            background-position: 0px -287px;
+        }
+
+        /*滑动条移动监听事件样式*/
+        /*.barh{*/
+        /*width: 500px;*/
+        /*height: 500px;*/
+        /*z-index: 99999;*/
+        /*position: fixed;*/
+        /*top: 0;*/
+        /*left: 0;*/
+        /*border: 10px solid red;*/
+        /*}*/
+
+
+    </style>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=E06eb9d756d0eafc722effb355657b4c"></script>
+    <script type="text/javascript"
+            src="/js/jquery-3.1.0.js"></script>
+
+    <title>车辆运行轨迹测试</title>
+    <script src="http://c.cnzz.com/core.php"></script>
+
+
+</head>
+<body id="body">
+
+<div unselectable="on" class=" BMap_stdMpCtrl BMap_stdMpType0 BMap_noprint anchorTL"
+     style="width: 62px; height: 192px; bottom: auto; right: auto; top: 10px; left: 10px; position: absolute; z-index: 1100; text-size-adjust: none;">
+    <div class="BMap_stdMpPan" style="background-position: 0px 0px;">
+        <div class="BMap_button BMap_panN" title="向上平移"></div>
+        <div class="BMap_button BMap_panW" title="向左平移"></div>
+        <div class="BMap_button BMap_panE" title="向右平移"></div>
+        <div class="BMap_button BMap_panS" title="向下平移"></div>
+        <div class="BMap_stdMpPanBg BMap_smcbg"></div>
+    </div>
+    <div class="BMap_stdMpZoom" style="height: 147px; width: 62px;">
+        <div id="bigger" class="BMap_button BMap_stdMpZoomIn" title="放大一级">
+            <div class="BMap_smcbg"></div>
+        </div>
+        <div id="smaller" class="BMap_button BMap_stdMpZoomOut" title="缩小一级" style="top: 126px;">
+            <div class="BMap_smcbg"></div>
+        </div>
+        <div class="BMap_stdMpSlider" style="height: 108px;">
+            <div class="BMap_stdMpSliderBgTop" style="height: 108px;">
+                <div class="BMap_smcbg"></div>
+            </div>
+            <div class="BMap_stdMpSliderBgBot" style="top: 25px; height: 87px;"></div>
+            <div class="BMap_stdMpSliderMask" title="放置到此级别"></div>
+            <div class="BMap_stdMpSliderBar" title="拖动缩放"
+                 style="cursor: url(&quot;http://api0.map.bdimg.com/images/openhand.cur&quot;) 8 8, default; top: 25px;">
+                <div class="BMap_smcbg"></div>
+            </div>
+        </div>
+        <div class="BMap_zlHolder">
+            <div class="BMap_zlSt">
+                <div class="BMap_smcbg"></div>
+            </div>
+            <div class="BMap_zlCity">
+                <div class="BMap_smcbg"></div>
+            </div>
+            <div class="BMap_zlProv">
+                <div class="BMap_smcbg"></div>
+            </div>
+            <div class="BMap_zlCountry">
+                <div class="BMap_smcbg"></div>
+            </div>
+        </div>
+    </div>
+    <div class="BMap_stdMpGeolocation" style="position: initial; display: none; margin-top: 43px; margin-left: 10px;">
+        <div class="BMap_geolocationContainer"
+             style="position: initial; width: 24px; height: 24px; overflow: hidden; margin: 0px; box-sizing: border-box;">
+            <div class="BMap_geolocationIconBackground"
+                 style="width: 24px; height: 24px; background-image: url(http://api0.map.bdimg.com/images/navigation-control/geolocation-control/pc/bg-20x20.png); background-size: 20px 20px; background-position: 3px 3px; background-repeat: no-repeat;">
+                <div class="BMap_geolocationIcon"
+                     style="position: initial; width: 24px; height: 24px; cursor: pointer; background-image: url('http://api0.map.bdimg.com/images/navigation-control/geolocation-control/pc/success-10x10.png'); background-size: 10px 10px; background-repeat: no-repeat; background-position: center;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="allmap">
+
+
+</div>
+
+
+</body>
+</html>
+<script type="text/javascript">
+
+    var testData = {
+        "success": true,
+        "errorCode": 1,
+        "errorDesc": "具体轨迹获取成功!",
+        "data": [
+            {
+                "lat": 23.74121277777778,
+                "lng": 113.018845
+            },
+            {
+                "lat": 23.74121277777778,
+                "lng": 113.018845
+            },
+            {
+                "lat": 23.74121277777778,
+                "lng": 113.018845
+            },
+            {
+                "lat": 23.740830833333334,
+                "lng": 113.01917083333333
+            },
+            {
+                "lat": 23.740830833333334,
+                "lng": 113.01917083333333
+            },
+            {
+                "lat": 23.740710833333335,
+                "lng": 113.01932583333334
+            },
+            {
+                "lat": 23.740710833333335,
+                "lng": 113.01932583333334
+            },
+            {
+                "lat": 23.740948888888887,
+                "lng": 113.01923777777778
+            },
+            {
+                "lat": 23.741160833333332,
+                "lng": 113.01909583333334
+            },
+            {
+                "lat": 23.741225833333335,
+                "lng": 113.01892083333334
+            },
+            {
+                "lat": 23.741125,
+                "lng": 113.01864277777777
+            },
+            {
+                "lat": 23.74127777777778,
+                "lng": 113.01873777777777
+            },
+            {
+                "lat": 23.74133,
+                "lng": 113.01875
+            },
+            {
+                "lat": 23.74133,
+                "lng": 113.01875
+            },
+            {
+                "lat": 23.74133,
+                "lng": 113.01875
+            },
+            {
+                "lat": 23.74133,
+                "lng": 113.01875
+            },
+            {
+                "lat": 23.74139277777778,
+                "lng": 113.01872777777778
+            },
+            {
+                "lat": 23.74154083333333,
+                "lng": 113.018615
+            },
+            {
+                "lat": 23.74133888888889,
+                "lng": 113.01856083333334
+            },
+            {
+                "lat": 23.741335,
+                "lng": 113.01858583333333
+            },
+            {
+                "lat": 23.741315833333335,
+                "lng": 113.01855777777777
+            },
+            {
+                "lat": 23.74124,
+                "lng": 113.01822777777778
+            },
+            {
+                "lat": 23.74124,
+                "lng": 113.01810083333334
+            },
+            {
+                "lat": 23.741382777777776,
+                "lng": 113.01726583333334
+            },
+            {
+                "lat": 23.741417777777777,
+                "lng": 113.01713583333333
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.741410833333333,
+                "lng": 113.01712583333334
+            },
+            {
+                "lat": 23.7414,
+                "lng": 113.01712777777777
+            },
+            {
+                "lat": 23.741408888888888,
+                "lng": 113.01711583333334
+            },
+            {
+                "lat": 23.74138388888889,
+                "lng": 113.01712083333334
+            },
+            {
+                "lat": 23.7414,
+                "lng": 113.01714277777778
+            },
+            {
+                "lat": 23.74140277777778,
+                "lng": 113.017115
+            },
+            {
+                "lat": 23.7414,
+                "lng": 113.01710777777778
+            },
+            {
+                "lat": 23.741407777777777,
+                "lng": 113.017125
+            },
+            {
+                "lat": 23.741415,
+                "lng": 113.01712277777777
+            },
+            {
+                "lat": 23.741417777777777,
+                "lng": 113.01713083333334
+            },
+            {
+                "lat": 23.741390833333334,
+                "lng": 113.01714777777778
+            },
+            {
+                "lat": 23.741390833333334,
+                "lng": 113.01715277777778
+            },
+            {
+                "lat": 23.741387777777778,
+                "lng": 113.01714583333333
+            },
+            {
+                "lat": 23.741385833333332,
+                "lng": 113.01727583333333
+            },
+            {
+                "lat": 23.741372777777777,
+                "lng": 113.017275
+            },
+            {
+                "lat": 23.741365,
+                "lng": 113.01725777777777
+            },
+            {
+                "lat": 23.74136,
+                "lng": 113.01729277777778
+            },
+            {
+                "lat": 23.741397777777777,
+                "lng": 113.01725777777777
+            },
+            {
+                "lat": 23.741395833333332,
+                "lng": 113.01722277777777
+            },
+            {
+                "lat": 23.741395833333332,
+                "lng": 113.01722277777777
+            },
+            {
+                "lat": 23.741422777777778,
+                "lng": 113.017245
+            },
+            {
+                "lat": 23.741415833333335,
+                "lng": 113.01718277777778
+            },
+            {
+                "lat": 23.741417777777777,
+                "lng": 113.01716583333334
+            },
+            {
+                "lat": 23.741435,
+                "lng": 113.01709777777778
+            },
+            {
+                "lat": 23.741415833333335,
+                "lng": 113.01709777777778
+            },
+            {
+                "lat": 23.74149277777778,
+                "lng": 113.01626583333334
+            },
+            {
+                "lat": 23.74190388888889,
+                "lng": 113.016185
+            },
+            {
+                "lat": 23.742585833333333,
+                "lng": 113.01619083333334
+            },
+            {
+                "lat": 23.743870833333332,
+                "lng": 113.01623083333334
+            },
+            {
+                "lat": 23.744285833333333,
+                "lng": 113.01620888888888
+            },
+            {
+                "lat": 23.744285833333333,
+                "lng": 113.016195
+            },
+            {
+                "lat": 23.744787777777777,
+                "lng": 113.014275
+            },
+            {
+                "lat": 23.745022777777777,
+                "lng": 113.01291277777777
+            },
+            {
+                "lat": 23.74574888888889,
+                "lng": 113.00886
+            },
+            {
+                "lat": 23.74581583333333,
+                "lng": 113.00719083333334
+            },
+            {
+                "lat": 23.74577,
+                "lng": 113.00655583333334
+            },
+            {
+                "lat": 23.745445,
+                "lng": 113.00640583333333
+            },
+            {
+                "lat": 23.745355833333335,
+                "lng": 113.006365
+            },
+            {
+                "lat": 23.74501777777778,
+                "lng": 113.00639277777778
+            },
+            {
+                "lat": 23.744955833333332,
+                "lng": 113.00633277777777
+            },
+            {
+                "lat": 23.745022777777777,
+                "lng": 113.00561277777778
+            },
+            {
+                "lat": 23.745245,
+                "lng": 113.00542777777778
+            },
+            {
+                "lat": 23.745310833333335,
+                "lng": 113.00540277777777
+            },
+            {
+                "lat": 23.745530833333333,
+                "lng": 113.00535
+            },
+            {
+                "lat": 23.745710833333334,
+                "lng": 113.00535
+            },
+            {
+                "lat": 23.745727777777777,
+                "lng": 113.00536277777778
+            },
+            {
+                "lat": 23.745727777777777,
+                "lng": 113.00536277777778
+            },
+            {
+                "lat": 23.74565777777778,
+                "lng": 113.00239777777777
+            },
+            {
+                "lat": 23.74542,
+                "lng": 113.00015777777777
+            },
+            {
+                "lat": 23.745270833333333,
+                "lng": 112.99919083333333
+            },
+            {
+                "lat": 23.74514,
+                "lng": 112.99880277777778
+            },
+            {
+                "lat": 23.74514,
+                "lng": 112.99880277777778
+            },
+            {
+                "lat": 23.745137777777778,
+                "lng": 112.998815
+            },
+            {
+                "lat": 23.745137777777778,
+                "lng": 112.998815
+            },
+            {
+                "lat": 23.745120833333335,
+                "lng": 112.99881583333334
+            },
+            {
+                "lat": 23.745120833333335,
+                "lng": 112.99881583333334
+            },
+            {
+                "lat": 23.745067777777777,
+                "lng": 112.99877083333334
+            },
+            {
+                "lat": 23.744055833333334,
+                "lng": 112.99847277777778
+            },
+            {
+                "lat": 23.74224583333333,
+                "lng": 112.99834777777778
+            },
+            {
+                "lat": 23.740780833333332,
+                "lng": 112.99821277777778
+            },
+            {
+                "lat": 23.738685833333335,
+                "lng": 112.997965
+            },
+            {
+                "lat": 23.737485833333334,
+                "lng": 112.99786888888889
+            },
+            {
+                "lat": 23.737485833333334,
+                "lng": 112.99786888888889
+            },
+            {
+                "lat": 23.737485833333334,
+                "lng": 112.99786888888889
+            },
+            {
+                "lat": 23.737447777777778,
+                "lng": 112.99790277777778
+            },
+            {
+                "lat": 23.737447777777778,
+                "lng": 112.99790277777778
+            },
+            {
+                "lat": 23.737447777777778,
+                "lng": 112.99790277777778
+            },
+            {
+                "lat": 23.737447777777778,
+                "lng": 112.99790277777778
+            },
+            {
+                "lat": 23.737447777777778,
+                "lng": 112.99790277777778
+            },
+            {
+                "lat": 23.73719,
+                "lng": 112.99758277777778
+            },
+            {
+                "lat": 23.73719,
+                "lng": 112.99758277777778
+            },
+            {
+                "lat": 23.73719,
+                "lng": 112.99758277777778
+            },
+            {
+                "lat": 23.737230833333335,
+                "lng": 112.99706277777777
+            },
+            {
+                "lat": 23.73743,
+                "lng": 112.99679583333334
+            },
+            {
+                "lat": 23.73765,
+                "lng": 112.99687083333333
+            },
+            {
+                "lat": 23.737800833333335,
+                "lng": 112.99679583333334
+            },
+            {
+                "lat": 23.73785,
+                "lng": 112.99666583333334
+            },
+            {
+                "lat": 23.737885,
+                "lng": 112.99663777777778
+            },
+            {
+                "lat": 23.737872777777778,
+                "lng": 112.99666
+            },
+            {
+                "lat": 23.737867777777776,
+                "lng": 112.99666083333334
+            },
+            {
+                "lat": 23.737995,
+                "lng": 112.99672583333333
+            },
+            {
+                "lat": 23.738085,
+                "lng": 112.996655
+            },
+            {
+                "lat": 23.738270833333335,
+                "lng": 112.99632277777778
+            },
+            {
+                "lat": 23.738270833333335,
+                "lng": 112.99632277777778
+            },
+            {
+                "lat": 23.73835777777778,
+                "lng": 112.99644
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99636083333333
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.73832277777778,
+                "lng": 112.99637777777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738342777777778,
+                "lng": 112.99641277777778
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738345833333334,
+                "lng": 112.9964
+            },
+            {
+                "lat": 23.738325833333334,
+                "lng": 112.99638
+            },
+            {
+                "lat": 23.738325833333334,
+                "lng": 112.99638
+            },
+            {
+                "lat": 23.738325833333334,
+                "lng": 112.99638
+            },
+            {
+                "lat": 23.738325833333334,
+                "lng": 112.99638
+            }
+        ]
+    };
+
+
+    var testData2 = {
+        "success": true,
+        "errorCode": 1,
+        "errorDesc": "具体轨迹获取成功!",
+        "data": [
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.260981944444445,
+                "lng": 113.42476777777777
+            },
+            {
+                "lat": 24.26128388888889,
+                "lng": 113.42396777777778
+            },
+            {
+                "lat": 24.261733888888887,
+                "lng": 113.42250388888888
+            },
+            {
+                "lat": 24.262299722222224,
+                "lng": 113.42154388888889
+            },
+            {
+                "lat": 24.26285,
+                "lng": 113.42001583333334
+            },
+            {
+                "lat": 24.26285,
+                "lng": 113.4199838888889
+            },
+            {
+                "lat": 24.262915833333334,
+                "lng": 113.41987194444444
+            },
+            {
+                "lat": 24.262915833333334,
+                "lng": 113.41987194444444
+            },
+            {
+                "lat": 24.262915833333334,
+                "lng": 113.41987194444444
+            },
+            {
+                "lat": 24.262817777777776,
+                "lng": 113.42018388888889
+            },
+            {
+                "lat": 24.263067777777778,
+                "lng": 113.41988
+            },
+            {
+                "lat": 24.26318388888889,
+                "lng": 113.41967194444445
+            },
+            {
+                "lat": 24.2634,
+                "lng": 113.41863194444444
+            },
+            {
+                "lat": 24.26256777777778,
+                "lng": 113.41811194444445
+            },
+            {
+                "lat": 24.261299722222223,
+                "lng": 113.4184638888889
+            },
+            {
+                "lat": 24.260615833333333,
+                "lng": 113.41833583333333
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            },
+            {
+                "lat": 24.26038388888889,
+                "lng": 113.41809583333334
+            }
+        ]
+    }
+
+
+    var historys = [{
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 131,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:00:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.345063601377067,
+        "locStatus": null,
+        "lon": 113.15941842144147,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": null,
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": "2018-11-24 13:03:06",
+        "stopTime": null,
+        "stopTimeTimestamp": "2018-11-24 13:00:36",
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 212,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:03:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.34451272831308,
+        "locStatus": null,
+        "lon": 113.1592394745557,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": "2018-11-24 13:07:37",
+        "stopTime": null,
+        "stopTimeTimestamp": "2018-11-24 13:04:06",
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 115,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:08:07",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.34491447899637,
+        "locStatus": null,
+        "lon": 113.15960801454692,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": "2018-11-24 13:13:06",
+        "stopTime": null,
+        "stopTimeTimestamp": "2018-11-24 13:08:36",
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 105,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:13:37",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.344766013828366,
+        "locStatus": null,
+        "lon": 113.15995715890176,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 9.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "补报数据,车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 30,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:14:07",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.345628774310136,
+        "locStatus": null,
+        "lon": 113.16065439502704,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 18.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "补报数据,车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 348,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:14:37",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.346520093677956,
+        "locStatus": null,
+        "lon": 113.16103252078726,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 12.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "补报数据,车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 31,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:15:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.34763010978853,
+        "locStatus": null,
+        "lon": 113.1610314558992,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 13.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "补报数据,车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 25,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:15:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.347870654809782,
+        "locStatus": null,
+        "lon": 113.1612007775444,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": "2018-11-24 13:16:36",
+        "stopTime": null,
+        "stopTimeTimestamp": "2018-11-24 13:16:06",
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 29,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:17:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.348151025232543,
+        "locStatus": null,
+        "lon": 113.16132019599895,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 6.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 18,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:17:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.348651945266365,
+        "locStatus": null,
+        "lon": 113.16163889374212,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 10.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 238,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:18:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.348850353197456,
+        "locStatus": null,
+        "lon": 113.1611001055642,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 6.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": "2018-11-24 13:19:06",
+        "stopTime": null,
+        "stopTimeTimestamp": "2018-11-24 13:18:36",
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 89,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:19:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.348880884408107,
+        "locStatus": null,
+        "lon": 113.16126963040021,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 214,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:20:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.34847146935457,
+        "locStatus": null,
+        "lon": 113.16146950158492,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 11.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 212,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:20:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.3479001136078,
+        "locStatus": null,
+        "lon": 113.16103119741025,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 11.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 328,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:21:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.347179738894216,
+        "locStatus": null,
+        "lon": 113.16092218005329,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 34,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:22:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.347820560433764,
+        "locStatus": null,
+        "lon": 113.16117090421194,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 3,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:23:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.348681836684264,
+        "locStatus": null,
+        "lon": 113.16159896738023,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 11.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 299,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:24:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.349001097014945,
+        "locStatus": null,
+        "lon": 113.16133933379304,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 296,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:24:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.34917009887048,
+        "locStatus": null,
+        "lon": 113.16102001333553,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 10.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 346,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:25:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.349676998001073,
+        "locStatus": null,
+        "lon": 113.16017184542991,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 11.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 32,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:25:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.350117833056306,
+        "locStatus": null,
+        "lon": 113.16038084801797,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": "2018-11-24 13:26:36",
+        "stopTime": null,
+        "stopTimeTimestamp": "2018-11-24 13:26:06",
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 12,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:27:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.350198475907447,
+        "locStatus": null,
+        "lon": 113.16055030625782,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 6.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 297,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:27:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.350617173103274,
+        "locStatus": null,
+        "lon": 113.16021085063817,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 10.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 298,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:28:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.351162338035444,
+        "locStatus": null,
+        "lon": 113.15913344013339,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 15.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 299,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:28:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.351765703831134,
+        "locStatus": null,
+        "lon": 113.157926567892,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 18.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 301,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:29:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.35210069245598,
+        "locStatus": null,
+        "lon": 113.15713878547028,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 10.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 303,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:29:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.352496896435063,
+        "locStatus": null,
+        "lon": 113.15659023624549,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 9.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 271,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:30:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.352801390415685,
+        "locStatus": null,
+        "lon": 113.15585246581011,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 10.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 210,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:30:36",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.35233756793654,
+        "locStatus": null,
+        "lon": 113.15537455070451,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 7.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 146,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:31:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.352216912120724,
+        "locStatus": null,
+        "lon": 113.15529494104396,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 0.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": null,
+        "stopTime": null,
+        "stopTimeTimestamp": null,
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }, {
+        "MNT_TIME": null,
+        "available": null,
+        "callLetter": "13926676308",
+        "course": 219,
+        "customername": null,
+        "direction": null,
+        "endUnloadTimestamp": null,
+        "frame": null,
+        "gpsMile": null,
+        "gps_time": "2018-11-24 13:32:06",
+        "gpstime": null,
+        "indicia": "null",
+        "lat": 23.351964157917653,
+        "locStatus": null,
+        "lon": 113.15496633816042,
+        "minute": 0,
+        "nodeName": null,
+        "numberPlate": "粤R45383",
+        "obdMile": 0.0,
+        "obdOil": null,
+        "offlineTime": null,
+        "offlineTimestamp": null,
+        "onlineTimestamp": null,
+        "referenceposition": "",
+        "runstatus": null,
+        "securityPW": null,
+        "sn": null,
+        "speed": 7.0,
+        "stamp": null,
+        "startTime": null,
+        "startUnloadTimestamp": null,
+        "state": "车辆发动,已定位,GPS定位,北斗定位,GPS里程,车灯关",
+        "stateArray": null,
+        "statusType": 0,
+        "stopEndGpsTime": "2018-11-24 13:59:06",
+        "stopTime": "26分30秒",
+        "stopTimeTimestamp": "2018-11-24 13:32:36",
+        "unitId": 0,
+        "unloadTime": null,
+        "vehicleId": null,
+        "voltage": null
+    }];
+
+
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");    // 创建Map实例
+
+
+    var points = [];
+    console.log(historys);
+    for (var key in historys) {
+        // console.log(key)
+        var p = new BMap.Point(historys[key].lon, historys[key].lat);
+        // console.log(p);
+        points.push(p);
+    }
+
+    console.log(points);
+
+    //地图中心点
+    var center = points[0];//后面位置移动时也会使用到
+
+    map.centerAndZoom(center, 19 - (points.length / 15) > 12 ? 19 - (points.length / 15) : 12);  // 初始化地图,设置中心点坐标和地图级别
+    map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+
+    //画轨迹
+    var polyline = new BMap.Polyline(points, {
+        strokeColor: "green",//设置颜色
+        strokeWeight: 4, //宽度
+        strokeOpacity: 1,
+    });//透明度
+    map.addOverlay(polyline);
+
+
+    var startIcon = new BMap.Icon("/image/起点.png", new BMap.Size(32, 32), {imageOffset: new BMap.Size(0, 0)});//起点
+    var endIcon = new BMap.Icon("/image/终点.png", new BMap.Size(32, 32), {imageOffset: new BMap.Size(0, 0)});//终点
+
+
+    //添加起始点图标
+    var start = new BMap.Marker(points[0],//起始点的经纬度
+        {icon: startIcon});
+    map.addOverlay(start);
+    console.log(start);
+    var end = new BMap.Marker(points[points.length - 1],//终点的经纬度
+        {icon: endIcon});
+    map.addOverlay(end);
+    console.log(end);
+
+
+    $(function () {
+
+        /**
+         * 重写地图缩放事件
+         */
+        map.addEventListener("zoomend", function () {
+            // console.log(("地图缩放事件。。。"));
+
+            $(".BMap_stdMpSliderBgBot").css("top", 1 + (19 - map.getZoom()) * 6 + "px");
+            $(".BMap_stdMpSliderBgBot").css("height", 111 - (19 - map.getZoom()) * 6 + "px");
+
+            $(".BMap_stdMpSliderBar").css("top", 1 + (19 - map.getZoom()) * 6 + "px");
+
+        })
+
+
+        /**
+         * 放大地图
+         */
+        $("#bigger").click(function () {
+            // console.log("点击放大地图");
+            var zoom = map.getZoom();
+            if (zoom < 19) {
+                map.setZoom(zoom + 1);
+            }
+        });
+
+        /**
+         * 缩小地图
+         */
+        $("#smaller").click(function () {
+            // console.log("点击放大地图");
+            var zoom = map.getZoom();
+            if (zoom > 3) {
+                map.setZoom(zoom - 1);
+            }
+        });
+
+
+        //鼠标移动前的纵坐标
+        var moveY;
+        //鼠标移动距离
+        var toMove;
+        //滑动条按下之前的top值
+        var beforeTop;
+        //滑动条按下之前的height值
+        var beforeHeight;
+
+        /**
+         * 鼠标移动事件
+         */
+        function move(e) {
+            toMove = e.pageY - moveY;
+            var top = toMove + beforeTop;
+            var height = beforeHeight - toMove;
+            if (top >= 1 && top <= 97) {
+                //不能超过滑动范围
+                $(".BMap_stdMpSliderBgBot").css("top", top + "px");
+                $(".BMap_stdMpSliderBgBot").css("height", height + "px");
+                $(".BMap_stdMpSliderBar").css("top", 1 + top + "px");
+            }
+
+
+        }
+
+        $(".BMap_stdMpSliderBar").mousedown(function (e) {
+            // console.log("滑动条按下");
+            moveY = e.pageY;
+            beforeTop = parseInt($(".BMap_stdMpSliderBgBot").css("top"));
+            beforeHeight = parseInt($(".BMap_stdMpSliderBgBot").css("height"));
+            //添加鼠标移动监听事件
+            document.getElementById("body").addEventListener("mousemove", move);
+        });
+
+        $(".BMap_stdMpSliderBar").mouseup(function () {
+            // console.log("鼠标弹起");
+            map.setZoom(map.getZoom() - parseInt(toMove / 6));
+            document.getElementById("body").removeEventListener("mousemove", move);
+
+        });
+
+
+        /**
+         * 移动方向获得焦点事件
+         */
+        $(".BMap_panE").mouseover(function () {
+            $(".BMap_stdMpPan").css("background-position","0px -88px");
+        });
+        $(".BMap_panW").mouseover(function () {
+            $(".BMap_stdMpPan").css("background-position","0px -176px");
+        });
+        $(".BMap_panN").mouseover(function () {
+            $(".BMap_stdMpPan").css("background-position","0px -44px");
+        });
+        $(".BMap_panS").mouseover(function () {
+            $(".BMap_stdMpPan").css("background-position","0px -132px");
+        });
+
+        $(".BMap_stdMpPan").mouseleave(function () {
+            $(".BMap_stdMpPan").css("background-position","0px 0px");
+        });
+
+
+
+        /**
+         * 移动方向监听事件
+         */
+        var moveVal = 0.015;
+
+        $(".BMap_panE").click(function(){
+            center = new BMap.Point(center.lng+moveVal,center.lat);
+            map.panTo(center,false);
+        });
+
+        $(".BMap_panW").click(function(){
+            center = new BMap.Point(center.lng-moveVal,center.lat);
+            map.panTo(center,false);
+        });
+
+        $(".BMap_panN").click(function(){
+            center = new BMap.Point(center.lng,center.lat+moveVal);
+            map.panTo(center,false);
+        });
+        $(".BMap_panS").click(function(){
+            center = new BMap.Point(center.lng,center.lat-moveVal);
+            map.panTo(center,false);
+        });
+
+
+
+
+
+    })
+
+</script>
