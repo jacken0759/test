@@ -127,11 +127,11 @@
             background: #E6EAE9;
         }
 
-        .dateinput {
-            background-color: #15a6de;
-            width: 100%;
-            height: 60px;
-        }
+        /*.dateinput {*/
+            /*background-color: #dff0d8;*/
+            /*width: 100%;*/
+            /*height: 60px;*/
+        /*}*/
 
         #nowDate {
             margin-top: 13px;
@@ -150,7 +150,7 @@
         }
 
         th {
-            font: bold 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+            font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
             color: #4f6b72;
             border-right: 1px solid #C1DAD7;
             border-bottom: 1px solid #C1DAD7;
@@ -166,7 +166,7 @@
             border-right: 1px solid #C1DAD7;
             border-bottom: 1px solid #C1DAD7;
             /*background: #fff;*/
-            font-size: 14px;
+            font-size: 11px;
             padding: 6px 6px 6px 12px;
             color: #4f6b72;
         }
@@ -184,41 +184,54 @@
 </head>
 
 <body onLoad="nowdate();">
-<div class="dateinput">
-    <div class="container">
-        <span>选择日期</span>
-        <input type="date" id="nowDate">
-        <button type="button" onClick="getVehicleHistoryRecord();" class="btn">搜索</button>
+
+<div class="panel  panel-info">
+    <div class="panel-heading">
+        <div class="dateinput">
+            <div class="container">
+                <span>选择日期</span>
+                <input type="date" id="nowDate">
+                <button type="button" onClick="getVehicleHistoryRecord();" class="btn btn-success">搜索</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="history">
+            <table id="tabBinded" class="table table-bordered table-hover">
+                <tr>
+                    <th>启动时间</th>
+                    <th>熄火时间</th>
+                    <th>行驶里程</th>
+                    <th>行驶时间</th>
+                    <th>停靠时间</th>
+                </tr>
+                <tbody id="tbody">
+                <tr>
+                    <td>10:50:00</td>
+                    <td>11:50:00</td>
+                    <td>60</td>
+                    <td>01:00:00</td>
+                    <td>02:45:00</td>
+                </tr>
+                <tr>
+                    <td>10:50:00</td>
+                    <td>11:50:00</td>
+                    <td>60</td>
+                    <td>01:00:00</td>
+                    <td>02:45:00</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-<div class="history">
-    <table id="tabBinded" class="table table-bordered table-hover">
-        <tr>
-            <th>启动时间</th>
-            <th>熄火时间</th>
-            <th>行驶里程</th>
-            <th>行驶时间</th>
-            <th>停靠时间</th>
-        </tr>
-        <tbody id="tbody">
-        <tr>
-            <td>10:50:00</td>
-            <td>11:50:00</td>
-            <td>60</td>
-            <td>01:00:00</td>
-            <td>02:45:00</td>
-        </tr>
-        <tr>
-            <td>10:50:00</td>
-            <td>11:50:00</td>
-            <td>60</td>
-            <td>01:00:00</td>
-            <td>02:45:00</td>
-        </tr>
 
-        </tbody>
-    </table>
-</div>
-</div>
+
+
+
+
+
+
 </body>
 </html>
