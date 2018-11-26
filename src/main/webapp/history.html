@@ -40,10 +40,10 @@
         /**
          * 页面加载完成
          */
-        $(function () {
-            getHistory(new Date(), "R22H82", 151091, "13926672375", "51036050720");
-            console.log(GetRequest());
-        });
+        // $(function () {
+        //     getHistory(new Date(), "R22H82", 151091, "13926672375", "51036050720");
+        //     console.log(GetRequest());
+        // });
 
 
         function GetRequest() {
@@ -178,15 +178,56 @@
         }
 
         .panel-heading {
-            padding: 5px 15px;
+            padding: 5px 5px;
+        }
+
+        .panel-info>.panel-heading {
+            color: #31708f;
+            background-color: #d4e1ef;
+            border-color: #bce8f1;
         }
 
         .container{
-            text-align: center;
-            height: 40px;
-            line-height: 40px;
+            /*text-align: center;*/
+            height: 35px;
+            line-height: 35px;
+            color:white;
+            width: 100%;
+            padding-left:5px;
+            padding-right: 0;
+            margin-right:0;
+        }
+
+        .chooseDate{
+            /*font-size: 17px;*/
+            background-color: #43abde;
+            width: 60px;
+            height: 34px;
+            display: inline-block;
+            /*margin-bottom: 10px;*/
+        }
+        .btn{
+            /*margin-bottom: 10px;*/
+        }
+
+        #nowDate{
+            margin-left: 40px;
+            width: 130px;
+        }
+
+        #nowDate:hover{
+            color: white;
+        }
+
+        #getRecord{
+            margin-right: 0;
+        }
+
+        #getRecord:hover{
+            color: white;
         }
     </style>
+
 
 </head>
 
@@ -196,9 +237,11 @@
     <div class="panel-heading">
         <div class="dateinput">
             <div class="container">
-                <span class="label label-info" >查询日期</span>
-                <input type="date" class="btn"  style="background-color: #43abde;" id="nowDate">
-                <button type="button" onClick="getVehicleHistoryRecord();" class="btn" style="background-color: #43abde;">查询</button>
+                <!--<div class="chooseDate" ></div>-->
+                <img src="/image/轨迹查询.png" style="display: inline-block;width: 35px;height: 35px">
+                <span style="color: #4e9ae6">轨迹查询</span>
+                <input type="date" class="btn"  style="background-color: #4e9ae6;" id="nowDate">
+                <button id="getRecord" type="button" onClick="getVehicleHistoryRecord();" class="btn" style="background-color: #4e9ae6;">查询</button>
             </div>
         </div>
     </div>
