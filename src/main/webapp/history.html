@@ -13,6 +13,16 @@
     <script type="text/javascript">
 
 
+        function nowdate() {
+            var now = new Date();
+            var nowYear = now.getFullYear();
+            var nowMonth = now.getMonth() + 1 < 10 ? "0" + (now.getMonth() + 1) : now.getMonth();
+            var nowDay = now.getDate() < 10 ? "0" + now.getDate() : now.getDate();
+            var nowDate = nowYear + "-" + nowMonth + "-" + nowDay;
+            $("#nowDate").val(nowDate);
+        }
+
+
 
         function getVehicleHistoryRecord() {
             var a = document.getElementById("nowDate").value;
