@@ -11,31 +11,8 @@
     <!--<link rel="stylesheet" href="JS/jPaginate/css/style.css" type="text/css">-->
     <script type="text/javascript" src="js/jquery-3.1.0.js"></script>
     <script type="text/javascript">
-        function nowdate() {
-            var now = new Date();
-            var nowYear = now.getFullYear();
-            var nowMonth = now.getMonth() + 1 < 10 ? "0" + (now.getMonth() + 1) : now.getMonth();
-            var nowDay = now.getDate() < 10 ? "0" + now.getDate() : now.getDate();
-            var nowDate = nowYear + "-" + nowMonth + "-" + nowDay;
-            $("#nowDate").val(nowDate);
 
-            function insertHistory() {
-                var tbody = document.createElement("tbody");
-                var data = [
-                    {id: "001", fullname: "张三", sex: "男", score: "98,33,48"},
-                    {id: "002", fullname: "李四", sex: "w", score: "11,22,33"},
-                    {id: "003", fullname: "kyo", sex: "m", score: "22,33,55"},
-                    {id: "004", fullname: "yamazaki", sex: "w", score: "99, 100, 80"}
-                ];
-                for (var dto in data) {
-                    var tr = document.createElement("tr");
-                    var td0 = tr.insertCell(0);
-                    td0.innerHTML = Data[dto].id;
-                }
-                var tab = document.getElementById("tabBinded");
-                tab.appendChild(tbody);//将节点tbody加入节点尾部
-            }
-        }
+
 
         function getVehicleHistoryRecord() {
             var a = document.getElementById("nowDate").value;
@@ -44,8 +21,6 @@
 
 
         var httpUrl = "https://localhost:18443/";
-
-
         var operatorId = "R22H82";
         var vehicleId = 151091;
         var callLetter = "13926672375";
@@ -55,12 +30,24 @@
         /**
          * 页面加载完成
          */
-        // $(function () {
-        //     getHistory(new Date(), "R22H82", 151091, "13926672375", "51036050720");
-        //
-        //
-        // });
+        $(function () {
+            getHistory(new Date(), "R22H82", 151091, "13926672375", "51036050720");
+            console.log(GetRequest());
+        });
 
+
+        function GetRequest() {
+            var url = location.search; //获取url中"?"符后的字串
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for(var i = 0; i < strs.length; i ++) {
+                    theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
 
         /**
          * 获取轨迹段
@@ -133,11 +120,7 @@
             /*height: 60px;*/
         /*}*/
 
-        #nowDate {
-            margin-top: 13px;
-            width: 150px;
-            height: 34px
-        }
+
 
         .history {
             with: 100%
@@ -179,6 +162,20 @@
             background-color: white;
         }
 
+        /*调整面板个别样式*/
+        .panel-body {
+            padding: 5px;
+        }
+
+        .panel-heading {
+            padding: 5px 15px;
+        }
+
+        .container{
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+        }
     </style>
 
 </head>
@@ -189,9 +186,9 @@
     <div class="panel-heading">
         <div class="dateinput">
             <div class="container">
-                <span>选择日期</span>
-                <input type="date" id="nowDate">
-                <button type="button" onClick="getVehicleHistoryRecord();" class="btn btn-success">搜索</button>
+                <span class="label label-info" >查询日期</span>
+                <input type="date" class="btn"  style="background-color: #43abde;" id="nowDate">
+                <button type="button" onClick="getVehicleHistoryRecord();" class="btn" style="background-color: #43abde;">查询</button>
             </div>
         </div>
     </div>
